@@ -227,13 +227,18 @@ def exportar_historial_completo():
 # ESTILOS CSS PERSONALIZADOS (ALTO CONTRASTE)
 # ==========================================
 custom_css = """
-/* Ajustes generales de texto */
+:root {
+    color-scheme: dark !important;
+}
+
+/* Ajustes generales de la aplicación */
 body, .gradio-container {
     background-color: #12181b !important;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+    color: #f0f0f0 !important;
 }
 
-/* Encabezado */
+/* Encabezado Principal */
 .header-bar {
     background-color: #007a53;
     color: white;
@@ -248,7 +253,7 @@ body, .gradio-container {
 .header-title p { color: #e1f5fe !important; font-size: 14px !important; margin: 0 !important; }
 .badge-app { background-color: rgba(255, 255, 255, 0.2); color: #ffffff; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: bold; }
 
-/* Contadores y textos de pestañas */
+/* Contadores y Pestañas */
 button.tabnav-tab {
     color: #e0e0e0 !important;
     font-size: 15px !important;
@@ -259,8 +264,8 @@ button.tabnav-tab.selected {
     border-bottom-color: #4caf50 !important;
 }
 
-/* Títulos y Etiquetas */
-label span, h1, h2, h3, h4, p, span, div {
+/* Títulos, etiquetas y textos generales */
+label span, h1, h2, h3, h4, p, span, div, .gr-form {
     color: #f0f0f0 !important;
 }
 
@@ -289,13 +294,13 @@ cuerpo_por_defecto = """Apreciado(a) contribuyente {contribuyente}:
 
 La Secretaría de Hacienda Municipal le extiende un cordial saludo y expresa su sincero agradecimiento por mantenerse al día en el pago del Impuesto Predial Unificado."""
 
-with gr.Blocks(theme=gr.themes.Soft(dark_mode=True), css=custom_css, title="Alcaldía de Palmira - Notificaciones") as demo:
+with gr.Blocks(theme=gr.themes.Soft(), css=custom_css, title="Alcaldía de Palmira - Notificaciones") as demo:
 
     gr.HTML("""
         <div class="header-bar">
             <div class="header-title">
                 <h1>🏛️ Alcaldía de Palmira</h1>
-                <p>Subsecretaría de Ingresos y Tesorería | Secretaría de Hacienda | Sistema de Notificaciones Masivas</p>
+                <p>Subsecreatría de Ingresos y Tesorería -Secretaría de Hacienda - Sistema de Notificaciones Masivas</p>
             </div>
             <div class="badge-app">By John Lasso</div>
         </div>
