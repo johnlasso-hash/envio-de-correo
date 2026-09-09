@@ -5,6 +5,7 @@ import smtplib
 import re
 import sqlite3
 import time
+import socket
 from datetime import datetime, timedelta
 import pandas as pd
 from email.mime.multipart import MIMEMultipart
@@ -17,7 +18,7 @@ import gradio as gr
 # CONFIGURACIÓN Y BASE DE DATOS LOCAL
 # ==========================================
 SMTP_SERVER = "smtp.gmail.com"
-SMTP_PORT = 587
+SMTP_PORT = 465  # Puerto SSL para evitar bloqueos de red en Render
 DB_HISTORIAL = "historial_envios.sqlite"
 
 def inicializar_bd():
@@ -110,8 +111,13 @@ def procesar_y_enviar(correo_emisor, clave_app, archivo_excel, archivo_zip, asun
     registros_auditoria = []
 
     try:
-        server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
-        server.starttls()
+        # Forzar resolución únicamente mediante IPv4 para evitar 'Network is unreachable' en Render
+        if not hasattr(socket, 'getaddrinfo_orig'):
+            socket.getaddrinfo_orig = socket.getaddrinfo
+        socket.getaddrinfo = lambda *args, **kwargs: [res for res in socket.getaddrinfo_orig(*args, **kwargs) if res[0] == socket.AF_INET]
+
+        # Conexión directa cifrada por SSL
+        server = smtplib.SMTP_SSL(SMTP_SERVER, SMTP_PORT, timeout=30)
         server.login(correo_emisor.strip(), clave_app.strip())
     except Exception as e:
         return f"❌ **Error de autenticación SMTP:** Verifique sus credenciales.\n\n*Detalle:* {str(e)}", None
@@ -231,14 +237,12 @@ custom_css = """
     color-scheme: dark !important;
 }
 
-/* Ajustes generales de la aplicación */
 body, .gradio-container {
     background-color: #12181b !important;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
     color: #f0f0f0 !important;
 }
 
-/* Encabezado Principal */
 .header-bar {
     background-color: #007a53;
     color: white;
@@ -253,7 +257,6 @@ body, .gradio-container {
 .header-title p { color: #e1f5fe !important; font-size: 14px !important; margin: 0 !important; }
 .badge-app { background-color: rgba(255, 255, 255, 0.2); color: #ffffff; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: bold; }
 
-/* Contadores y Pestañas */
 button.tabnav-tab {
     color: #e0e0e0 !important;
     font-size: 15px !important;
@@ -264,12 +267,10 @@ button.tabnav-tab.selected {
     border-bottom-color: #4caf50 !important;
 }
 
-/* Títulos, etiquetas y textos generales */
 label span, h1, h2, h3, h4, p, span, div, .gr-form {
     color: #f0f0f0 !important;
 }
 
-/* Cuadro de Reglas */
 .info-rules-box {
     background-color: #1b2e2b !important;
     border: 1px solid #007a53 !important;
@@ -279,7 +280,6 @@ label span, h1, h2, h3, h4, p, span, div, .gr-form {
 .info-rules-box h4 { color: #81c784 !important; margin-top: 0; }
 .info-rules-box ul li { color: #e0e0e0 !important; margin-bottom: 6px; }
 
-/* Botón Principal */
 .btn-primary-palmira {
     background-color: #007a53 !important;
     color: #ffffff !important;
@@ -300,7 +300,7 @@ with gr.Blocks(theme=gr.themes.Soft(), css=custom_css, title="Alcaldía de Palmi
         <div class="header-bar">
             <div class="header-title">
                 <h1>🏛️ Alcaldía de Palmira</h1>
-                <p>Subsecreatría de Ingresos y Tesorería -Secretaría de Hacienda - Sistema de Notificaciones Masivas</p>
+                <p>Subsecretaría de Ingresos y Tesorería - Secretaría de Hacienda - Sistema de Notificaciones Masivas</p>
             </div>
             <div class="badge-app">By John Lasso</div>
         </div>
