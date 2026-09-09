@@ -224,32 +224,80 @@ def exportar_historial_completo():
     return ruta_historial
 
 # ==========================================
-# ESTILOS CSS PERSONALIZADOS
+# ESTILOS CSS PERSONALIZADOS (ALTO CONTRASTE)
 # ==========================================
 custom_css = """
-body, .gradio-container { background-color: #f4f6f8 !important; font-family: 'Segoe UI', Tahoma, sans-serif !important; }
-.header-bar { background-color: #007a53; color: white; padding: 16px 28px; border-radius: 0 0 8px 8px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
-.header-title h1 { color: white !important; font-size: 20px !important; margin: 0 !important; }
-.header-title p { color: #d1e7dd !important; font-size: 13px !important; margin: 0 !important; }
-.badge-app { background-color: rgba(255, 255, 255, 0.15); color: white; padding: 6px 14px; border-radius: 20px; font-size: 12px; }
-.card-box { background: #ffffff; border-radius: 12px; padding: 24px; border: 1px solid #e2e8f0; margin-bottom: 20px; }
-.info-rules-box { background-color: #e6f4ea; border: 1px solid #b7e1cd; border-radius: 10px; padding: 18px; color: #137333; }
-.btn-primary-palmira { background-color: #007a53 !important; color: white !important; border-radius: 8px !important; padding: 12px 20px !important; font-size: 15px !important; }
+/* Ajustes generales de texto */
+body, .gradio-container {
+    background-color: #12181b !important;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+}
+
+/* Encabezado */
+.header-bar {
+    background-color: #007a53;
+    color: white;
+    padding: 18px 28px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.header-title h1 { color: #ffffff !important; font-size: 22px !important; margin: 0 !important; font-weight: bold; }
+.header-title p { color: #e1f5fe !important; font-size: 14px !important; margin: 0 !important; }
+.badge-app { background-color: rgba(255, 255, 255, 0.2); color: #ffffff; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: bold; }
+
+/* Contadores y textos de pestañas */
+button.tabnav-tab {
+    color: #e0e0e0 !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+}
+button.tabnav-tab.selected {
+    color: #4caf50 !important;
+    border-bottom-color: #4caf50 !important;
+}
+
+/* Títulos y Etiquetas */
+label span, h1, h2, h3, h4, p, span, div {
+    color: #f0f0f0 !important;
+}
+
+/* Cuadro de Reglas */
+.info-rules-box {
+    background-color: #1b2e2b !important;
+    border: 1px solid #007a53 !important;
+    border-radius: 10px;
+    padding: 18px;
+}
+.info-rules-box h4 { color: #81c784 !important; margin-top: 0; }
+.info-rules-box ul li { color: #e0e0e0 !important; margin-bottom: 6px; }
+
+/* Botón Principal */
+.btn-primary-palmira {
+    background-color: #007a53 !important;
+    color: #ffffff !important;
+    border-radius: 8px !important;
+    padding: 12px 20px !important;
+    font-size: 16px !important;
+    font-weight: bold !important;
+}
 """
 
 cuerpo_por_defecto = """Apreciado(a) contribuyente {contribuyente}:
 
 La Secretaría de Hacienda Municipal le extiende un cordial saludo y expresa su sincero agradecimiento por mantenerse al día en el pago del Impuesto Predial Unificado."""
 
-with gr.Blocks(css=custom_css, title="Alcaldía de Palmira - Notificaciones") as demo:
+with gr.Blocks(theme=gr.themes.Soft(dark_mode=True), css=custom_css, title="Alcaldía de Palmira - Notificaciones") as demo:
 
     gr.HTML("""
         <div class="header-bar">
             <div class="header-title">
                 <h1>🏛️ Alcaldía de Palmira</h1>
-                <p>Secretaría de Hacienda - Sistema de Notificaciones Masivas</p>
+                <p>Subsecretaría de Ingresos y Tesorería | Secretaría de Hacienda | Sistema de Notificaciones Masivas</p>
             </div>
-            <div class="badge-app">Web App V2.0</div>
+            <div class="badge-app">by John Lasso</div>
         </div>
     """)
 
@@ -277,7 +325,7 @@ with gr.Blocks(css=custom_css, title="Alcaldía de Palmira - Notificaciones") as
 
                 with gr.Column(scale=10):
                     gr.Markdown("### 📊 Reporte de Ejecución")
-                    txt_reporte = gr.Markdown("*Los resultados del envío masivo y el informe de trazabilidad se mostrarán aquí en tiempo real...*", elem_classes="card-box")
+                    txt_reporte = gr.Markdown("*Los resultados del envío masivo y el informe de trazabilidad se mostrarán aquí en tiempo real...*")
                     file_descarga_reporte = gr.File(label="📥 Descargar Reporte en CSV", interactive=False)
 
                     gr.HTML("""
@@ -308,4 +356,3 @@ with gr.Blocks(css=custom_css, title="Alcaldía de Palmira - Notificaciones") as
 # Configuración de puerto para Render
 port = int(os.environ.get("PORT", 7860))
 demo.launch(server_name="0.0.0.0", server_port=port)
-
