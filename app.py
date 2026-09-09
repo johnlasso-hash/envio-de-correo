@@ -193,6 +193,7 @@ def procesar_y_enviar(correo_emisor, clave_app, archivo_excel, archivo_zip, asun
     ruta_csv = f"reporte_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
     df_auditoria.to_csv(ruta_csv, index=False, encoding='utf-8-sig')
 
+    logs_texto = "\n".join(detalles_log)
     resumen_informe = f"""### 📊 Informe de Gestión de Envíos - Municipio de Palmira
 
 **Emisor Configurado:** `{correo_emisor.strip()}`  
@@ -209,9 +210,8 @@ def procesar_y_enviar(correo_emisor, clave_app, archivo_excel, archivo_zip, asun
 ---
 #### 📄 Detalle Operativo de Envíos:
 ```text
-""" + "
-".join(detalles_log) + "
-```"
+{logs_texto}
+```"""
 
     return resumen_informe, ruta_csv
 
@@ -308,3 +308,4 @@ with gr.Blocks(css=custom_css, title="Alcaldía de Palmira - Notificaciones") as
 # Configuración de puerto para Render
 port = int(os.environ.get("PORT", 7860))
 demo.launch(server_name="0.0.0.0", server_port=port)
+
