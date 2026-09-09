@@ -297,7 +297,7 @@ with gr.Blocks(theme=gr.themes.Soft(dark_mode=True), css=custom_css, title="Alca
                 <h1>🏛️ Alcaldía de Palmira</h1>
                 <p>Subsecretaría de Ingresos y Tesorería | Secretaría de Hacienda | Sistema de Notificaciones Masivas</p>
             </div>
-            <div class="badge-app">by John Lasso</div>
+            <div class="badge-app">By John Lasso</div>
         </div>
     """)
 
